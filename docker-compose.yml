@@ -4,7 +4,7 @@ services:
     image: ghcr.io/redfofo/pianke:latest
     build: .
     ports:
-      - "${PLAYER_BIND_ADDRESS:-}:${PLAYER_PORT:-8788}:8788"
+      - "${PLAYER_BIND_ADDRESS:-}:${PLAYER_PORT:-8789}:8789"
       - "${EMBY_DISCOVERY_PORT:-7359}:7359/udp"
     environment:
       ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
@@ -12,8 +12,8 @@ services:
       SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
       CAPY_BACKEND_URL: ${CAPY_BACKEND_URL:-}
       DATA_DIR: /app/data
-      PORT: 8788
-      PLAYER_PORT: ${PLAYER_PORT:-8788}
+      PORT: 8789
+      PLAYER_PORT: ${PLAYER_PORT:-8789}
       PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
       UPSTREAM_DOH_URL: ${UPSTREAM_DOH_URL:-}
       TRUSTED_FAKE_IP_CIDRS: ${TRUSTED_FAKE_IP_CIDRS:-}
@@ -43,7 +43,7 @@ services:
     tmpfs:
       - /tmp:size=64m,noexec,nosuid
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8788/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8789/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
       interval: 30s
       timeout: 5s
       retries: 3

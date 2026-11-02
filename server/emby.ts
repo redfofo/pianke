@@ -294,16 +294,16 @@ export function registerEmbyRoutes(
   });
 
   for (const path of routePaths('/System/Info/Public')) app.get(path, async request => ({
-    LocalAddress: `${request.protocol}://${request.headers.host || 'localhost:8788'}`,
+    LocalAddress: `${request.protocol}://${request.headers.host || 'localhost:8789'}`,
     ServerName: process.env.SERVER_NAME || '片刻', Version: serverVersion, ProductName: '片刻媒体服务器',
     OperatingSystem: process.platform, Id: catalog.serverId, StartupWizardCompleted: true,
   }));
   for (const path of routePaths('/System/Info')) app.get(path, async request => ({
-    LocalAddress: `${request.protocol}://${request.headers.host || 'localhost:8788'}`,
+    LocalAddress: `${request.protocol}://${request.headers.host || 'localhost:8789'}`,
     WanAddress: '', ServerName: process.env.SERVER_NAME || '片刻', Version: serverVersion,
     ProductName: '片刻媒体服务器', OperatingSystem: process.platform, Id: catalog.serverId,
     HasPendingRestart: false, IsShuttingDown: false, SupportsLibraryMonitor: false,
-    WebSocketPortNumber: Number(process.env.PORT || 8788), CompletedInstallations: [],
+    WebSocketPortNumber: Number(process.env.PORT || 8789), CompletedInstallations: [],
   }));
   for (const path of routePaths('/System/Endpoint')) app.get(path, async request => ({
     IsLocal: true, IsInNetwork: true, RemoteEndPoint: request.ip,

@@ -319,5 +319,5 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   const shutdown = async () => { await app.close(); process.exit(0); };
   process.once('SIGTERM', shutdown);
   process.once('SIGINT', shutdown);
-  await app.listen({ port: Number(process.env.PORT || 8788), host: process.env.HOST || '0.0.0.0' });
+  await app.listen({ port: Number(process.env.PORT || 8789), host: process.env.HOST || '0.0.0.0' });
 }

@@ -60,7 +60,7 @@ export class TranscodingManager {
   }
 
   private mediaUrl(input: TranscodeInput): string {
-    const base = process.env.TRANSCODE_PROXY_BASE_URL || `http://127.0.0.1:${Number(process.env.PORT || 8788)}`;
+    const base = process.env.TRANSCODE_PROXY_BASE_URL || `http://127.0.0.1:${Number(process.env.PORT || 8789)}`;
     const separator = input.mediaPath.includes('?') ? '&' : '?';
     return `${base}${input.mediaPath}${separator}api_key=${encodeURIComponent(input.accessToken)}`;
   }

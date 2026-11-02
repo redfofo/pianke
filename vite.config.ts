@@ -45,7 +45,7 @@ export default defineConfig({
       : undefined,
   ],
   build: { outDir: 'dist/client' },
-  server: { port: 5173, proxy: { '/api': 'http://localhost:8788' } },
+  server: { port: 5173, proxy: { '/api': 'http://localhost:8789' } },
   test: {
     environment: 'happy-dom',
     include: ['src/**/*.test.{ts,tsx}'],

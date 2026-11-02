@@ -33,8 +33,8 @@ test('empty boot serves health/config and rejects unconfigured, invalid and cros
       const sources = await app.inject('/api/sources');
       assert.equal(sources.statusCode, 503);
       assert.match(sources.json().error, /设置/);
-      for (const backendUrl of ['', 'ftp://example.org', 'http://user:pass@example.org', 'http://example.org/path', 'http://example.org/..', 'http://example.org/?', 'http://example.org/#', 'http://localhost:8788']) {
-        const response = await app.inject({ method: 'POST', url: '/api/config', headers: { host: 'localhost:8788' }, payload: { backendUrl } });
+      for (const backendUrl of ['', 'ftp://example.org', 'http://user:pass@example.org', 'http://example.org/path', 'http://example.org/..', 'http://example.org/?', 'http://example.org/#', 'http://localhost:8789']) {
+        const response = await app.inject({ method: 'POST', url: '/api/config', headers: { host: 'localhost:8789' }, payload: { backendUrl } });
         assert.equal(response.statusCode, 400, backendUrl);
       }
       for (const headers of [{ origin: 'https://evil.example' }, { origin: 'null' }, { 'sec-fetch-site': 'cross-site' }]) {

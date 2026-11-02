@@ -19,7 +19,7 @@
    - 群晖、威联通、绿联、飞牛等 NAS：在套件中心安装 “Container Manager” 或 “Docker”。
    - Linux：参考 [Docker 官方安装文档](https://docs.docker.com/engine/install/)。
    - Windows / macOS：安装 [Docker Desktop](https://www.docker.com/products/docker-desktop/)。
-3. **Happy Capy 的访问地址**：例如 `http://192.168.1.10:端口号`。这台设备必须能打开这个地址。
+3. **Happy Capy 的访问地址**：例如 `http://192.168.1.10:8788`（Happy Capy 默认端口是 8788）。这台设备必须能打开这个地址。
 
 ## 安装步骤
 
@@ -34,7 +34,7 @@ services:
     container_name: pianke
     restart: unless-stopped
     ports:
-      - "8788:8788"          # 网页端口：冒号左边可以改成其他端口，比如 "9000:8788"
+      - "8789:8789"          # 网页端口：冒号左边可以改成其他端口，比如 "9000:8789"
       - "7359:7359/udp"      # Emby 客户端局域网自动发现，用不到可以删掉这一行
     environment:
       # 管理员账号（只在第一次启动时创建）
@@ -43,7 +43,7 @@ services:
       ADMIN_PASSWORD: ""
       # 可选：Happy Capy 地址，也可以留空，启动后在网页“设置”里填写
       CAPY_BACKEND_URL: ""
-      # 可选：本机局域网地址，填了以后 Emby 客户端能自动发现，例如 http://192.168.1.20:8788
+      # 可选：本机局域网地址，填了以后 Emby 客户端能自动发现，例如 http://192.168.1.20:8789
       PUBLIC_BASE_URL: ""
       # 只有通过 https:// 域名访问时才改成 "true"
       SESSION_COOKIE_SECURE: "false"
@@ -82,7 +82,7 @@ docker compose up -d
 
 ### 第 3 步：打开网页并完成设置
 
-1. 浏览器打开 `http://设备IP:8788`，例如 `http://192.168.1.20:8788`。
+1. 浏览器打开 `http://设备IP:8789`，例如 `http://192.168.1.20:8789`。
 2. 用 `admin` 和你刚才设置的密码登录。
 3. 进入“设置”，填写 Happy Capy 地址并保存。
 4. 回到首页，就能看到片源了。
@@ -97,7 +97,7 @@ docker compose up -d
 
 在 Emby 客户端里添加服务器：
 
-- 地址：`http://设备IP:8788`
+- 地址：`http://设备IP:8789`
 - 用户名和密码：和网页登录用的一样
 
 如果在配置里填了 `PUBLIC_BASE_URL`，同一个局域网里的客户端通常能自动搜到“片刻”。
@@ -149,8 +149,8 @@ docker compose up -d
 **有声音没画面**
 片源可能是 HEVC (H.265) 编码，当前浏览器不支持。可以换一个浏览器或设备，或者用 Emby 客户端播放并选择转码。
 
-**8788 端口被占用**
-把 `ports` 里的 `"8788:8788"` 改成 `"9000:8788"` 这类其他端口，然后用 `http://设备IP:9000` 访问。
+**8789 端口被占用**
+把 `ports` 里的 `"8789:8789"` 改成 `"9000:8789"` 这类其他端口，然后用 `http://设备IP:9000` 访问。
 
 **想通过外网域名访问**
 需要自己配置 HTTPS 反向代理（Nginx 示例见 [`deploy/nginx-location.conf`](deploy/nginx-location.conf)），并把 `SESSION_COOKIE_SECURE` 改成 `"true"`。只能部署在域名根路径，不支持 `/pianke/` 这类子路径。公网访问务必使用强密码。

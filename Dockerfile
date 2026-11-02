@@ -16,5 +16,5 @@ COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 RUN mkdir /app/data && chown node:node /app/data
 USER node
-EXPOSE 8788 7359/udp
+EXPOSE 8789 7359/udp
 CMD ["node", "dist/server/index.js"]

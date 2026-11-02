@@ -21,7 +21,7 @@ export class EmbyDiscovery {
     this.socket = socket;
     socket.on('message', (message, remote) => {
       if (message.toString('utf8').trim() !== 'who is EmbyServer?') return;
-      const publicPort = Number(process.env.PLAYER_PORT || process.env.PORT || 8788);
+      const publicPort = Number(process.env.PLAYER_PORT || process.env.PORT || 8789);
       const configuredAddress = process.env.PUBLIC_BASE_URL?.trim().replace(/\/+$/, '');
       const address = configuredAddress || `http://${os.hostname()}:${publicPort}`;
       const payload = Buffer.from(JSON.stringify({ Address: address, Id: this.serverId, Name: process.env.SERVER_NAME || '片刻' }));

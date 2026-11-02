@@ -14,6 +14,22 @@ dist
 # Runtime data
 data/
 .config-*.tmp
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Secrets / credentials
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+
+# Local AI assistant settings
+.claude/settings.local.json
 
 # Tests
 test-results

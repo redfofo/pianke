@@ -1,4 +1,5 @@
-FROM node:24-alpine AS build
+# 构建阶段只产出与架构无关的 JS（生产依赖无原生模块），在构建机原生架构上运行，避免多架构构建走 QEMU 模拟
+FROM --platform=$BUILDPLATFORM node:24-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci

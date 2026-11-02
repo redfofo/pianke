@@ -35,6 +35,11 @@ services:
       - transcode_cache:/transcodes
     cap_drop:
       - ALL
+    # 入口脚本修正数据目录归属并降权为 node 用户所需；降权后服务进程不再持有这些能力
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
     security_opt:
       - no-new-privileges:true
     pids_limit: 128

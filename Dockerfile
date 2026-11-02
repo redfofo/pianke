@@ -7,14 +7,16 @@ COPY . .
 RUN npm run build && npm prune --omit=dev
 
 FROM node:24-alpine
-RUN apk add --no-cache ffmpeg
+RUN apk add --no-cache ffmpeg su-exec
 WORKDIR /app
 ENV NODE_ENV=production
 ENV DATA_DIR=/app/data
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
+COPY --chmod=755 docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN mkdir /app/data && chown node:node /app/data
-USER node
+# 不设 USER：入口脚本以 root 修正数据目录归属后，降权为 node 运行服务
 EXPOSE 8789 7359/udp
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["node", "dist/server/index.js"]

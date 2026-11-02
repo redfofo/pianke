@@ -13,6 +13,7 @@ dist
 
 # Runtime data
 data/
+pianke_data/
 .config-*.tmp
 *.sqlite
 *.sqlite3

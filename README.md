@@ -34,41 +34,45 @@ services:
     container_name: pianke
     restart: unless-stopped
     ports:
-      - "8789:8789"          # 网页端口：冒号左边可以改成其他端口，比如 "9000:8789"
-      - "7359:7359/udp"      # Emby 客户端局域网自动发现，用不到可以删掉这一行
+      - "8789:8789"
     environment:
-      # 管理员账号（只在第一次启动时创建）
-      ADMIN_USERNAME: admin
-      # 必填！管理员密码，10 到 128 个字符。请改成你自己的密码
-      ADMIN_PASSWORD: ""
-      # 可选：Happy Capy 地址，也可以留空，启动后在网页“设置”里填写
-      CAPY_BACKEND_URL: ""
-      # 可选：本机局域网地址，填了以后 Emby 客户端能自动发现，例如 http://192.168.1.20:8789
-      PUBLIC_BASE_URL: ""
-      # 只有通过 https:// 域名访问时才改成 "true"
-      SESSION_COOKIE_SECURE: "false"
-      DATA_DIR: /app/data
-      TRANSCODE_DIR: /transcodes
+      ADMIN_PASSWORD: ""   # 必填：管理员密码，10 到 128 个字符
     volumes:
-      - pianke_data:/app/data          # 账号、收藏、观看记录、海报缓存都存在这里
-      - pianke_transcode:/transcodes
-    # 以下是安全加固设置，保持原样即可
-    read_only: true
-    tmpfs:
-      - /tmp:size=64m,noexec,nosuid
-    cap_drop:
-      - ALL
-    security_opt:
-      - no-new-privileges:true
-    pids_limit: 128
-    mem_limit: 1536m
-
-volumes:
-  pianke_data:
-  pianke_transcode:
+      - ./pianke_data:/app/data
 ```
 
 **一定要修改** `ADMIN_PASSWORD`，在引号里填上你的密码，例如 `ADMIN_PASSWORD: "MyPassw0rd2026"`。不填的话程序无法启动。
+
+账号、收藏、观看记录和海报缓存都保存在同一文件夹下的 `pianke_data` 目录里，第一次启动时自动创建，更新或重建容器不会丢失。这个目录要放在本机硬盘上，不要放在 SMB/NFS 等网络共享盘里，否则数据库可能出错。
+
+### 可选设置
+
+需要时再加，不加也能正常使用。
+
+**更换网页端口**：把 `"8789:8789"` 冒号左边的数字改掉，例如 `"9000:8789"`，然后用 `http://设备IP:9000` 访问。冒号右边不要改。
+
+**更多环境变量**：加在 `environment:` 下面，和 `ADMIN_PASSWORD` 对齐：
+
+| 变量 | 作用 |
+| --- | --- |
+| `ADMIN_USERNAME` | 管理员用户名，默认 `admin`。只在第一次启动时生效 |
+| `CAPY_BACKEND_URL` | Happy Capy 地址，例如 `http://192.168.1.10:8788`。不填也行，启动后在网页“设置”里填写 |
+| `SESSION_COOKIE_SECURE` | 通过 `https://` 域名访问时设为 `"true"` |
+| `PUBLIC_BASE_URL` | 本机局域网地址，例如 `http://192.168.1.20:8789`，配合下面的 UDP 端口让 Emby 客户端自动发现 |
+
+**Emby 客户端局域网自动发现**：在 `ports:` 下加一行 `- "7359:7359/udp"`，并设置 `PUBLIC_BASE_URL`。
+
+加完之后的样子：
+
+```yaml
+    ports:
+      - "8789:8789"
+      - "7359:7359/udp"
+    environment:
+      ADMIN_PASSWORD: "MyPassw0rd2026"
+      CAPY_BACKEND_URL: "http://192.168.1.10:8788"
+      PUBLIC_BASE_URL: "http://192.168.1.20:8789"
+```
 
 ### 第 2 步：启动
 
@@ -100,7 +104,7 @@ docker compose up -d
 - 地址：`http://设备IP:8789`
 - 用户名和密码：和网页登录用的一样
 
-如果在配置里填了 `PUBLIC_BASE_URL`，同一个局域网里的客户端通常能自动搜到“片刻”。
+如果按[可选设置](#可选设置)开启了局域网自动发现，同一个局域网里的客户端通常能自动搜到“片刻”。
 
 ### 手机当 App 用
 
@@ -119,7 +123,7 @@ docker compose up -d
 
 更新、重启、停止都**不会**丢失账号和观看记录。
 
-> 注意：`docker compose down -v` 会**删除所有数据**（账号、收藏、观看记录），除非你确定要清空，否则不要加 `-v`。
+**备份**：先 `docker compose down` 停止，复制整个 `pianke_data` 目录，再 `docker compose up -d` 启动。不要在运行时直接复制，可能得到不完整的数据库。迁移到新机器时，把 `docker-compose.yml` 和 `pianke_data` 一起复制过去即可。
 
 ### 固定在某个版本
 
@@ -141,7 +145,7 @@ docker compose up -d
 - 云服务器需要在防火墙或安全组里放行这个端口。
 
 **忘记管理员密码**
-修改 `ADMIN_PASSWORD` 不会重置已有的管理员密码。如果没有其他管理员账号，只能清空数据重新开始：运行 `docker compose down -v` 后再 `docker compose up -d`。这会删除所有账号和记录。
+修改 `ADMIN_PASSWORD` 不会重置已有的管理员密码。如果没有其他管理员账号，只能清空数据重新开始：`docker compose down` 停止后，删除 `pianke_data` 目录，再 `docker compose up -d`。这会删除所有账号和记录。
 
 **首页没有内容 / 提示要设置上游**
 管理员还没在“设置”里填写 Happy Capy 地址，或者这台设备访问不到那个地址。
@@ -150,7 +154,7 @@ docker compose up -d
 片源可能是 HEVC (H.265) 编码，当前浏览器不支持。可以换一个浏览器或设备，或者用 Emby 客户端播放并选择转码。
 
 **8789 端口被占用**
-把 `ports` 里的 `"8789:8789"` 改成 `"9000:8789"` 这类其他端口，然后用 `http://设备IP:9000` 访问。
+见[可选设置](#可选设置)里的“更换网页端口”。
 
 **想通过外网域名访问**
 需要自己配置 HTTPS 反向代理（Nginx 示例见 [`deploy/nginx-location.conf`](deploy/nginx-location.conf)），并把 `SESSION_COOKIE_SECURE` 改成 `"true"`。只能部署在域名根路径，不支持 `/pianke/` 这类子路径。公网访问务必使用强密码。

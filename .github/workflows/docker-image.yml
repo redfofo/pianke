@@ -1,12 +1,10 @@
 name: Docker image
 
+# 推送 v1.2.3 这样的 git 标签时发布镜像：标签 1.2.3 + latest
+# 预发布版本（如 v1.2.3-beta.1）只打 1.2.3-beta.1，不更新 latest
 on:
   push:
-    branches: [main]
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-  workflow_dispatch:
+    tags: ['v*.*.*']
 
 permissions:
   contents: read
@@ -42,8 +40,7 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=latest
-            type=sha,prefix=,format=short
+            type=semver,pattern={{version}}
 
       - name: Build and push
         uses: docker/build-push-action@v6

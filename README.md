@@ -125,10 +125,10 @@ docker compose up -d
 
 镜像有两种标签：
 
-- `latest`：始终是最新版本
-- 提交号，例如 `ghcr.io/redfofo/pianke:699fa2e`：固定在某次更新，不会自动变化
+- `latest`：始终是最新正式版
+- 版本号，例如 `ghcr.io/redfofo/pianke:1.0.0`：固定在这个版本，不会自动变化
 
-如果新版本有问题，可以把配置里的 `latest` 换成之前的提交号，再运行 `docker compose up -d` 回退。所有可用标签见 [GitHub Packages 页面](https://github.com/redfofo/pianke/pkgs/container/pianke)。
+如果新版本有问题，可以把配置里的 `latest` 换成之前的版本号，再运行 `docker compose up -d` 回退。所有可用标签见 [GitHub Packages 页面](https://github.com/redfofo/pianke/pkgs/container/pianke)。
 
 ## 常见问题
 
@@ -164,3 +164,15 @@ cd pianke
 cp .env.example .env   # 编辑 .env，填写 ADMIN_PASSWORD
 docker compose up -d --build
 ```
+
+## 发布新版本（维护者）
+
+推送 `v` 开头的 git 标签就会自动构建并发布镜像，例如发布 1.0.1：
+
+```sh
+npm version 1.0.1 -m "Release %s"   # 更新 package.json 并创建 v1.0.1 标签
+git push --follow-tags
+```
+
+镜像会打上 `1.0.1` 和 `latest` 两个标签。预发布版本（如 `v1.1.0-beta.1`）只打版本号标签，不更新 `latest`。平时推送到 `main` 不会发布镜像。
+

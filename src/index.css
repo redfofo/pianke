@@ -1,0 +1,348 @@
+@import 'tailwindcss';
+/* Enter/exit animations for shadcn overlays (select, dialog, tooltip). Everything else animates with Motion. */
+@import 'tw-animate-css';
+
+/*
+ * Geist, Latin subset only: the UI is Chinese, so the other subsets (Cyrillic, Vietnamese…) would only
+ * bloat the PWA precache. CJK text falls back to the platform font.
+ */
+@font-face {
+  font-family: 'Geist Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * State variants used by the shadcn radix-nova components. Copied from `shadcn/tailwind.css` so the
+ * shadcn CLI does not have to be a runtime dependency.
+ */
+@custom-variant data-open {
+  &:where([data-state='open']),
+  &:where([data-open]:not([data-open='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-closed {
+  &:where([data-state='closed']),
+  &:where([data-closed]:not([data-closed='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-checked {
+  &:where([data-state='checked']),
+  &:where([data-checked]:not([data-checked='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-unchecked {
+  &:where([data-state='unchecked']),
+  &:where([data-unchecked]:not([data-unchecked='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-selected {
+  &:where([data-selected='true']) {
+    @slot;
+  }
+}
+@custom-variant data-disabled {
+  &:where([data-disabled='true']),
+  &:where([data-disabled]:not([data-disabled='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-active {
+  &:where([data-state='active']),
+  &:where([data-active]:not([data-active='false'])) {
+    @slot;
+  }
+}
+@custom-variant data-horizontal {
+  &:where([data-orientation='horizontal']) {
+    @slot;
+  }
+}
+@custom-variant data-vertical {
+  &:where([data-orientation='vertical']) {
+    @slot;
+  }
+}
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@theme inline {
+  /* Geist covers Latin only; Chinese falls back to the platform CJK font. */
+  --font-sans: 'Geist Variable', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans CJK SC', sans-serif;
+  --font-heading: var(--font-sans);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* App-specific tokens. */
+  --color-warning: var(--warning);
+  --color-cover: var(--cover);
+  --color-stage: var(--stage);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* shadcn neutral palette, matching emby-strm-302. */
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+  --warning: oklch(0.666 0.179 58.318);
+  --cover: oklch(0.97 0 0);
+  --stage: #000000;
+  --header-height: 3rem;
+  --bottom-nav-height: 0px;
+  color-scheme: light;
+}
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+  --warning: oklch(0.769 0.188 70.08);
+  --cover: oklch(0.269 0 0);
+  color-scheme: dark;
+}
+/* Phones: the main navigation moves to a bottom tab bar within thumb reach. */
+@media (max-width: 639px) {
+  :root {
+    --bottom-nav-height: calc(56px + env(safe-area-inset-bottom));
+  }
+  /* The watch page hides the tab bar, like most video apps, to give the player the space. */
+  :root.no-bottom-nav {
+    --bottom-nav-height: 0px;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-background text-foreground;
+    min-width: 320px;
+  }
+  button,
+  a,
+  input,
+  [tabindex] {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  /* iOS zooms focused fields below 16px. Keep pinch zoom available and cover landscape touch devices too. */
+  @media (max-width: 639px), (any-pointer: coarse) {
+    input,
+    textarea,
+    select {
+      font-size: max(16px, 1rem) !important;
+    }
+  }
+}
+
+@layer components {
+  .cover-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 0.75rem;
+  }
+  @media (min-width: 640px) {
+    .cover-grid {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 1.5rem 1rem;
+    }
+  }
+  @media (min-width: 1536px) {
+    .cover-grid {
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+  }
+
+  /*
+   * Poster backdrop for the browse and catalog banners (inside a card). `--hero-art` is set inline. The
+   * art fades out itself: a colour overlay alone leaves the filtered layer's edge visible as a line.
+   */
+  .hero-backdrop {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero-backdrop::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: var(--hero-art) center 24% / cover no-repeat;
+    filter: blur(1px) saturate(0.8);
+    opacity: 0.45;
+    mask-image: linear-gradient(90deg, transparent 15%, #000 70%);
+  }
+  .hero-backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      90deg,
+      var(--card) 20%,
+      color-mix(in srgb, var(--card) 60%, transparent) 60%,
+      transparent
+    );
+  }
+  @media (max-width: 639px) {
+    .hero-backdrop::before {
+      mask-image: linear-gradient(0deg, transparent 10%, #000 80%);
+    }
+    .hero-backdrop::after {
+      background: linear-gradient(
+        0deg,
+        var(--card) 25%,
+        color-mix(in srgb, var(--card) 55%, transparent) 70%,
+        transparent
+      );
+    }
+  }
+
+  /*
+   * Video stage, shared by the player and its placeholder. `--video-ratio` (width / height) is set
+   * from the video's real dimensions. The width follows from the height budget, so portrait short dramas get a
+   * narrower, taller stage and landscape videos never outgrow a short viewport (phones held sideways) or
+   * stretch across very wide screens. 240px keeps room for the essential player controls.
+   */
+  .video-stage {
+    /* Tall enough for the video to fit the viewport once scrolled to. */
+    --stage-max-height: max(240px, min(calc(100dvh - var(--header-height) - 48px), 820px));
+    --stage-ratio: var(--video-ratio, 16 / 10);
+    background: var(--stage);
+    width: min(100%, max(240px, calc(var(--stage-max-height) * var(--stage-ratio))));
+    margin-inline: auto;
+    aspect-ratio: var(--stage-ratio);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+  }
+  /*
+   * ArtPlayer's controls carry large z-indexes; contain them so overlays (the mobile sidebar sheet, dialogs)
+   * stay on top. Web fullscreen must escape to cover the page, so it is exempt.
+   */
+  .video-stage:not(:has(.art-fullscreen-web)) {
+    isolation: isolate;
+  }
+  /* Set by VideoPlayer when the player is too narrow for every control. */
+  .video-stage .art-control-overflow {
+    display: none !important;
+  }
+  @media (max-width: 639px) {
+    .video-stage {
+      /* Leaves room for the title above, so the whole portrait player fits on first view. */
+      --stage-max-height: max(320px, calc(100dvh - var(--header-height) - var(--bottom-nav-height) - 170px));
+      --stage-ratio: var(--video-ratio, 16 / 9);
+      border-radius: var(--radius-lg);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

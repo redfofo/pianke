@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="description" content="片刻 · 短剧放映室" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <title>片刻 · 视频播放器</title>
+    <script>
+      // Apply the saved theme before first paint to avoid a light flash in dark mode.
+      (function () {
+        var mode = null;
+        try { mode = localStorage.getItem('mujian-theme'); } catch (e) {}
+        var dark = mode === 'dark' || (mode !== 'light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+        if (dark) document.documentElement.classList.add('dark');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

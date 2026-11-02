@@ -1,0 +1,23 @@
+node_modules
+dist
+.git
+.gitignore
+.env
+.env.*
+*.log
+data
+**/.config-*.tmp
+
+# Tests output (e2e/ itself stays: tsc -b references e2e/tsconfig.json)
+test-results
+playwright-report
+coverage
+
+# Not needed to build the image
+docs
+deploy
+README.md
+.github
+Dockerfile
+docker-compose.yml
+.dockerignore

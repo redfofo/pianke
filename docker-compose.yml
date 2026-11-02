@@ -1,0 +1,51 @@
+services:
+  player:
+    build: .
+    ports:
+      - "${PLAYER_BIND_ADDRESS:-}:${PLAYER_PORT:-8788}:8788"
+      - "${EMBY_DISCOVERY_PORT:-7359}:7359/udp"
+    environment:
+      ADMIN_USERNAME: ${ADMIN_USERNAME:-admin}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SESSION_COOKIE_SECURE: ${SESSION_COOKIE_SECURE:-false}
+      CAPY_BACKEND_URL: ${CAPY_BACKEND_URL:-}
+      DATA_DIR: /app/data
+      PORT: 8788
+      PLAYER_PORT: ${PLAYER_PORT:-8788}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-}
+      UPSTREAM_DOH_URL: ${UPSTREAM_DOH_URL:-}
+      TRUSTED_FAKE_IP_CIDRS: ${TRUSTED_FAKE_IP_CIDRS:-}
+      WIDGET_TIMEOUT_MS: ${WIDGET_TIMEOUT_MS:-120000}
+      CATALOG_SYNC_INTERVAL_MINUTES: ${CATALOG_SYNC_INTERVAL_MINUTES:-360}
+      CATALOG_SYNC_MAX_PAGES: ${CATALOG_SYNC_MAX_PAGES:-100}
+      CATALOG_DETAIL_CACHE_DAYS: ${CATALOG_DETAIL_CACHE_DAYS:-7}
+      CATALOG_DETAIL_CONCURRENCY: ${CATALOG_DETAIL_CONCURRENCY:-3}
+      POSTER_CACHE_MAX_MB: ${POSTER_CACHE_MAX_MB:-2048}
+      POSTER_CACHE_MAX_AGE_DAYS: ${POSTER_CACHE_MAX_AGE_DAYS:-90}
+      TRANSCODE_DIR: /transcodes
+      TRANSCODE_MAX_SESSIONS: ${TRANSCODE_MAX_SESSIONS:-1}
+      TRANSCODE_VIDEO_CODEC: ${TRANSCODE_VIDEO_CODEC:-libx264}
+      TRANSCODE_PRESET: ${TRANSCODE_PRESET:-veryfast}
+    restart: unless-stopped
+    read_only: true
+    volumes:
+      - player_data:/app/data
+      - transcode_cache:/transcodes
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    # Page cache counts against this limit; leave room for the catalog database's hot indexes on top of Node's heap.
+    mem_limit: 1536m
+    tmpfs:
+      - /tmp:size=64m,noexec,nosuid
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8788/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  player_data:
+  transcode_cache:

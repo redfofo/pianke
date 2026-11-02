@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+.vite
+*.tsbuildinfo
+
+# Environment (keep the example)
+.env
+.env.*
+!.env.example
+
+# Runtime data
+data/
+.config-*.tmp
+
+# Tests
+test-results
+playwright-report
+blob-report
+coverage
+.vp-audit
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+*.swp
